@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/ujunglangit-id/gossip-memberlist/lib/mesh"
 	"io/ioutil"
 	"log"
@@ -85,9 +87,14 @@ func main() {
 		errs <- fmt.Errorf("%s", <-c)
 	}()
 	go func() {
+		//http handler
+		r := mux.NewRouter()
+
 		logger.Printf("HTTP server starting (%s)", *httpListen)
-		http.HandleFunc("/", handle(peer))
-		errs <- http.ListenAndServe(*httpListen, nil)
+		//http.HandleFunc("/", handle(peer))
+		r.HandleFunc("/broadcast", broadcastMessage).Methods("POST")
+		//errs <- http.ListenAndServe(*httpListen, nil)
+		errs <- http.ListenAndServe("localhost:8080", r)
 	}()
 	logger.Print(<-errs)
 }
@@ -107,6 +114,19 @@ func handle(c counter) http.HandlerFunc {
 			fmt.Fprintf(w, "incr => %d\n", c.incr())
 		}
 	}
+}
+
+func broadcastMessage(w http.ResponseWriter, r *http.Request) {
+	productInfo := ProductInfo{}
+	err := json.NewDecoder(r.Body).Decode(&productInfo)
+	if err != nil {
+		log.Printf("error parse form data : %+v", err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("ok"))
+	return
 }
 
 type stringset map[string]struct{}

@@ -114,7 +114,7 @@ func (c *gossipChannel) relayUnicast(dstPeerName PeerName, buf []byte) (err erro
 func (c *gossipChannel) relayBroadcast(srcName PeerName, update GossipData) {
 	c.routes.ensureRecalculated()
 	for _, conn := range c.ourself.ConnectionsTo(c.routes.BroadcastAll(srcName)) {
-		log.Println("broadcast to remote address : %s", conn.remoteTCPAddress())
+		log.Printf("broadcast to remote address : %s", conn.remoteTCPAddress())
 		c.senderFor(conn).Broadcast(srcName, update)
 	}
 }

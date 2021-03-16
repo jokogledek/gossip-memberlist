@@ -9,9 +9,10 @@ Start several peers on the same host.
 Tell the second and subsequent peers to connect to the first one.
 
 ```
-$ ./increment-only-counter -hwaddr 00:00:00:00:00:01 -nickname a -mesh :6001 -http :8001 &
-$ ./increment-only-counter -hwaddr 00:00:00:00:00:02 -nickname b -mesh :6002 -http :8002 -peer 127.0.0.1:6001 &
-$ ./increment-only-counter -hwaddr 00:00:00:00:00:03 -nickname c -mesh :6003 -http :8003 -peer 127.0.0.1:6001 &
+$ ./increment-only-counter -hwaddr 00:00:00:00:00:01 -nickname node_a -mesh :6001 -http :8001 &
+$ ./increment-only-counter -hwaddr 00:00:00:00:00:02 -nickname node_b -mesh :6002 -http :8002 -peer 127.0.0.1:6001 &
+$ ./increment-only-counter -hwaddr 00:00:00:00:00:03 -nickname node_c -mesh :6003 -http :8003 -peer 127.0.0.1:6002 &
+$ ./increment-only-counter -hwaddr 00:00:00:00:00:04 -nickname node_d -mesh :6004 -http :8004 -peer 127.0.0.1:6003 &
 ```
 
 Get current value using the HTTP API of any peer.
